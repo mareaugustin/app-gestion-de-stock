@@ -1,0 +1,149 @@
+<div class="row p-3">
+    <div class="card shadow border-0 mb-7 col-md-6 col-lg-12">
+        <div class="card-body">
+            <h5 class="card-title">Répartition des catégories</h5>
+            <div class="chart-container">
+                <canvas id="barChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="card shadow border-0 mb-7 col-md-6 col-lg-12">
+        <div class="card-body">
+            <h5 class="card-title">Ventes au fil du temps</h5>
+            <div class="chart-container">
+                <canvas id="lineChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="card shadow border-0 mb-7 col-md-6 col-lg-12">
+        <div class="card-body">
+            <h5 class="card-title">Répartition des articles</h5>
+            <div class="chart-container">
+                <canvas id="lineChart2"></canvas>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Bar Chart
+    var ctxPie = document.getElementById('barChart').getContext('2d');
+    var pieChart = new Chart(ctxPie, {
+        type: 'bar',
+        data: {
+            labels: {{ categories|safe }},
+            datasets: [{
+                label: 'Nombre d\'articles',
+                data: {{ categorie_counts|safe }},
+                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#E7E9ED', '#8E5EA2', '#03A9F4', '#CDDC39', '#8BC34A', '#FF5722'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return tooltipItem.label + ': ' + tooltipItem.raw;
+                        }
+                    }
+                },
+                title: {
+                    display: true,
+                    text: 'Répartition des catégories en fonctions des articles',
+                    font: {
+                        size: 16
+                    }
+                }
+            },
+            maintainAspectRatio: false
+        }
+    });
+
+    // Line Chart pour les ventes
+    var ctxLine = document.getElementById('lineChart').getContext('2d');
+    var lineChart = new Chart(ctxLine, {
+        type: 'line',
+        data: {
+            labels: {{ sale_dates_labels|safe }},
+            datasets: [{
+                label: 'Ventes au fil du temps',
+                data: {{ sale_dates_values|safe }},
+                fill: false,
+                borderColor: '#4BC0C0',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return 'Ventes: ' + tooltipItem.raw;
+                        }
+                    }
+                },
+                title: {
+                    display: true,
+                    text: 'Répartitions des ventes au fil du temps',
+                    font: {
+                        size: 16
+                    }
+                }
+            },
+            maintainAspectRatio: false
+        }
+    });
+
+    // Line Chart pour les quantités des articles
+    var ctxLine2 = document.getElementById('lineChart2').getContext('2d');
+    var lineChart2 = new Chart(ctxLine2, {
+        type: 'line',
+        data: {
+            labels: {{ item_labels|safe }},
+            datasets: [{
+                label: 'Quantité des articles',
+                data: {{ item_quantities|safe }},
+                borderColor: {{ item_colors|safe }},
+                backgroundColor: 'rgba(0, 0, 0, 0)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' },
+                title: { 
+                    display: true,
+                    text: 'Répartions des articles en fonctions de leur quantité',
+                    font: {
+                        size: 16
+                    }
+                }
+            },
+            maintainAspectRatio: false
+        }
+    });
+  </script>
+
+  <style>
+  .chart-container {
+    position: relative;
+    width: 100%;
+    height: 400px;
+  }
+
+  #barChart, #lineChart, #lineChart2{
+    max-width: 100%;
+    height: 100%;
+  }
+  </style>

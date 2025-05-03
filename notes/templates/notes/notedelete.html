@@ -1,0 +1,32 @@
+{% extends "stock/base.html" %} 
+{% block title %}Confirmer la suppression{% endblock %}
+
+{% block content %}
+<div class="container pt-5">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-danger text-white">
+            <h5 class="mb-0">Confirmer la suppression</h5>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                <fieldset class="form-group">
+                    <legend class="border-bottom mb-4 text-danger">Supprimer l'article</legend>
+                    <p class="text-muted">
+                        Êtes-vous sûr de vouloir supprimer l'approvisonnement chez 
+                        <strong class="text-danger">"{{ object.entreprise_nom }}"</strong> ?
+                    </p>
+                </fieldset>
+                <div class="form-group d-flex justify-content-between">
+                    <button class="btn btn-danger btn-sm" type="submit">
+                        <i class="fa-solid fa-trash"></i> Oui, supprimer
+                    </button>
+                    <a class="btn btn-secondary btn-sm" href="{% url 'note_list' %}">
+                        <i class="fa-solid fa-arrow-left"></i> Annuler
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

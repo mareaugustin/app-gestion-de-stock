@@ -1,0 +1,61 @@
+{% extends 'stock/base.html' %}
+{% block title %}Mettre à jour la transaction de vente{% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Créer ou mettre à jour une vente</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    {{ form.article.label_tag }}
+                    {{ form.article }}
+                    {{ form.article.errors }}
+                </div>
+                <div class="form-group">
+                    {{ form.nom_client.label_tag }}
+                    {{ form.nom_client }}
+                    {{ form.nom_client.errors }}
+                </div>
+                <div class="form-group">
+                    {{ form.payment_method.label_tag }}
+                    {{ form.payment_method }}
+                    {{ form.payment_method.errors }}
+                </div>
+                <div class="form-group">
+                    {{ form.quantite.label_tag }}
+                    {{ form.quantite }}
+                    {{ form.quantite.errors }}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    {{ form.montant_recu.label_tag }}
+                    {{ form.montant_recu }}
+                    {{ form.montant_recu.errors }}
+                </div>
+                <div class="form-group">
+                    {{ form.prix.label_tag }}
+                    {{ form.prix }}
+                    {{ form.prix.errors }}
+                </div>
+                <div class="form-group">
+                    {{ form.valeur_total.label_tag }}
+                    {{ form.valeur_total }}
+                    {{ form.valeur_total.errors }}
+                </div>
+                <div class="form-group">
+                    {{ form.balance.label_tag }}
+                    {{ form.balance }}
+                    {{ form.balance.errors }}
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="mt-3 btn btn-primary">
+            <i class="fas fa-save"></i> Enregistrer
+        </button>
+    </form>
+</div>
+{% endblock %}

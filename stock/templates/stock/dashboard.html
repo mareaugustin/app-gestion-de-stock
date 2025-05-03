@@ -1,0 +1,286 @@
+{% extends "stock/base.html" %}
+{% load static %}
+{% block title %}Tableau de bord{% endblock title %}
+
+{% block content %}
+<!-- Dashboard -->
+<div class="d-flex flex-column flex-lg-row h-lg-full bg-surface-secondary">
+    {% load static %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+    <!-- Main content -->
+    <div class=" flex-grow-1 overflow-y-lg-auto">
+        {% if user.is_authenticated %}
+            <h2 class="ps-3 pt-3">Salut <strong>{{ user }}</strong>&#x1F44B; Bienvenue sur votre tableau de bord !</h2>
+        {% else %}
+            <h2 class="ps-3 pt-3">Bienvenue sur le tableau de bord ! Connectez-vous pour accéder à plus de fonctionnalités.</h2>
+        {% endif %}
+        <!-- Main -->
+        <main class="py-6 bg-surface-secondary">
+            <div class="container-fluid">
+                <!-- Card stats -->
+                <div class="row g-6 mb-6">
+                    <style>
+                        a {
+                            text-decoration: none;
+                        }
+                    </style>
+                    <div class="col-xl-3 col-sm-6 col-12" id="products">
+                        <a href="{% url 'productslist' %}">
+                            <div class="card shadow border-0">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <span class="h6 font-semibold text-muted text-sm d-block mb-2">Articles</span>
+                                            <span class="h3 font-bold mb-0">{{total_items}}</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape bg-tertiary text-white text-lg rounded-circle">
+                                                <i class="fa fa-clipboard-list"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-2 mb-0 text-sm">
+                                        <span class="badge badge-pill bg-soft-success text-success me-2">
+                                            <i class="fa fa-arrow-up me-1"></i>13%
+                                        </span>
+                                        <span class="text-nowrap text-xs text-muted">Depuis le mois dernier</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-xl-3 col-sm-6 col-12" id="profiles">
+                        <a href="{% url 'profile_list' %}">
+                            <div class="card shadow border-0">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <span class="h6 font-semibold text-muted text-sm d-block mb-2">Personnel</span>
+                                            <span class="h3 font-bold mb-0">{{profiles_count}}</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape bg-primary text-white text-lg rounded-circle">
+                                                <i class="fa-solid fa fa-users"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-2 mb-0 text-sm">
+                                        <span class="badge badge-pill bg-soft-success text-success me-2">
+                                            <i class="fa fa-arrow-up me-1"></i>30%
+                                        </span>
+                                        <span class="text-nowrap text-xs text-muted">Depuis le mois dernier</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-xl-3 col-sm-6 col-12" id="deliveries">
+                        <a href="{% url 'deliveries' %}">
+                            <div class="card shadow border-0">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <span class="h6 font-semibold text-muted text-sm d-block mb-2">Livraisons</span>
+                                            <span class="h3 font-bold mb-0">{{livraison.count}}</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape bg-info text-white text-lg rounded-circle">
+                                                <i class="fa fa-truck"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-2 mb-0 text-sm">
+                                        <span class="badge badge-pill bg-soft-danger text-danger me-2">
+                                            <i class="fa fa-arrow-down me-1"></i>-5%
+                                        </span>
+                                        <span class="text-nowrap text-xs text-muted">Depuis le mois dernier</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-xl-3 col-sm-6 col-12" id="sales">
+                        <a href="{% url 'saleslist' %}">
+                            <div class="card shadow border-0">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <span class="h6 font-semibold text-muted text-sm d-block mb-2">Ventes</span>
+                                            <span class="h3 font-bold mb-0">{{sale.count}}</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                <i class="fa fa-shopping-cart"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-2 mb-0 text-sm">
+                                        <span class="badge badge-pill bg-soft-success text-success me-2">
+                                            <i class="fa fa-arrow-up me-1"></i>10%
+                                        </span>
+                                        <span class="text-nowrap text-xs text-muted">Depuis le mois dernier</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                {% comment %} {% if low_stock_items %}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong>Attention !</strong> Les articles suivants ont un stock faible :
+                    <ul>
+                        {% for item in low_stock_items %}
+                        <li>{{ item.nom }} (Quantité : {{ item.quantite }})</li>
+                        {% endfor %}
+                    </ul>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                {% endif %}  {% endcomment %}
+
+                {% if messages %}
+                <div class="container mt-3">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                    
+
+                {% if can_edit %}
+                   
+                {% else %}
+                   
+                {% endif %}
+
+                {% include 'stock/charts.html' %}
+
+
+                {% load render_table from django_tables2 %}
+                {% load querystring from django_tables2 %}
+                <div class="container card shadow border-0 mb-7">
+                    <!-- Header Section -->
+                    <div class="container my-4">
+                        <div class="card shadow-sm rounded p-3">
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    <h4 class="display-6 mb-0 text-success">Articles</h4>
+                                </div>
+                                <div class="col-md-6 d-flex justify-content-end gap-2">
+                                    <a class="btn btn-success btn-sm rounded-pill shadow-sm" href="{% url 'product-create' %}">
+                                        <i class="fa-solid fa-plus"></i> Ajouter un article
+                                    </a>
+                                    <a class="btn btn-success btn-sm rounded-pill shadow-sm" href="{% querystring '_export'='csv' %}">
+                                        <i class="fa-solid fa-download"></i> Exporter vers CSV
+                                    </a>
+                                </div>
+                            </div>
+                            <form class="input-group mt-4" role="search" id="searchform" action="{% url 'item_search_list_view' %}" method="get" accept-charset="utf-8">
+                                <input id="searchbox" name="q" type="text" class="form-control border-0 rounded-pill shadow-sm" placeholder="Trouver des articles">
+                                <button class="btn btn-outline-success rounded-pill shadow-sm" type="submit">
+                                    <i class="fa-solid fa-search"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="px-4">
+                        
+                        <style>
+                            .table th, .table td {
+                                text-align: center;
+                            }
+                        </style>
+
+                        <table class="table table-bordered table-striped table-hover table-sm">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col"><a href="{% querystring table.prefixed_order_by_field=column.order_by_alias.next %}">ID <i class="fa-solid fa-sort"></i></a></th>
+                                    <th scope="col">Nom <i class="fa-solid fa-sort"></i></th>
+                                    <th scope="col">Categorie <i class="fa-solid fa-sort"></i></th>
+                                    <th scope="col">Quantité <i class="fa-solid fa-sort"></i></th>
+                                    <th scope="col">Prix <i class="fa-solid fa-sort"></i></th>
+                                    <th scope="col">Date d'expiration <i class="fa-solid fa-sort"></i></th>
+                                    <th scope="col">Fournisseur <i class="fa-solid fa-sort"></i></th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in items %}
+                                <tr class="{% if item.quantite <= 5 %}table-danger{% endif %}">
+                                    <th scope="row">{{ item.id }}</th>
+                                    <td>{{ item.nom }}</td>
+                                    <td>{{ item.categorie.nom }}</td>
+                                    <td>{{ item.quantite }}</td>
+                                    <td>{{ item.prix }}</td>
+                                    <td>{{ item.date_expiration }}</td>
+                                    <td>{{ item.fournisseur }}</td>
+                                    <td>
+                                        <a class="btn btn-outline-info btn-sm" href="{% url 'product-update' item.slug %}">
+                                            <i class="fa-solid fa-pen"></i> Modifier
+                                        </a>
+                                        <a class="btn btn-outline-danger btn-sm float-end" href="{% url 'product-delete' item.slug %}">
+                                            <i class="fa-solid fa-trash"></i> Supprimer
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {% if is_paginated %}
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </span>
+                            </li>
+                            {% endif %}
+                            {% for i in paginator.page_range %}
+                            {% if page_obj.number == i %}
+                            <li class="page-item active" aria-current="page">
+                                <span class="page-link">{{ i }} <span class="visually-hidden">(current)</span></span>
+                            </li>
+                            {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                            </li>
+                            {% endif %}
+                            {% endfor %}
+                            {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </span>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                </div>
+            </div>            
+        </main>
+        <footer class="bg-dark text-white text-center p-3">
+            © 2025 Application de Gestion de Stock.
+        </footer>
+    </div>
+    
+</div>
+
+{% endblock content %}

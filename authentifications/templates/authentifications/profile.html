@@ -1,0 +1,59 @@
+{% extends 'stock/base.html' %}
+{% block title %}Page du personnel{% endblock %}
+
+{% block content %}
+<div class="container">
+        <div class="card">
+            <div class="row p-3">
+                <div class="col-md-8">
+                    <table class="table table-borderless">
+                        <thead>
+                            <span class="h4">Informations sur le profil</span class="h4">
+                            <a class="btn btn-outline-success btn-sm float-end" href="{% url 'user-profile-update' %}">Modifier le profil</a>
+                            <hr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">Nom d'utilisateur :</th>
+                                <td>{{ user.username }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Connecté(e) en tant que :</th>
+                                <td>
+                                    <span class="badge badge-pill bg-soft-success text-success me-2">
+                                    {% if user.profile.role == 'AD' %}
+                                    Administrateur
+                                    {% elif user.profile.role == 'EX' %}
+                                    Executive
+                                    {% else %}
+                                    Operative
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Prénom :</th>
+                                <td>{{ user.profile.prenom }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Nom :</th>
+                                <td>{{ user.profile.nom }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">E-mail :</th>
+                                <td>{{ user.email }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">N° de Téléphone :</th>
+                                <td>{{ user.profile.telephone }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-4">
+                    <img class="rounded-pill img-fluid" src="{{ user.profile.photo_profil.url }}" alt="profile-image">
+                </div>
+            </div>
+        </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "stock/base.html" %}
+{% load static %}{% load crispy_forms_tags %}
+{% block title %}Mettre à jour la transaction d'achat{% endblock %}
+{% block content %}
+<div class="container p-5">
+    <h2>Créer ou mettre à jour un achat</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div class="row mt-5">
+            <div class="form-group col-md-4">
+                {{ form.article.label_tag }}
+                {{ form.article }}
+                {{ form.article.errors }}
+            </div>
+            <div class="form-group col-md-4">
+                {{ form.fournisseur.label_tag }}
+                {{ form.fournisseur }}
+                {{ form.fournisseur.errors }}
+            </div>
+            <div class="form-group col-md-4">
+                {{ form.description.label_tag }}
+                {{ form.description }}
+                {{ form.description.errors }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6">
+                {{ form.date_livraison.label_tag }}
+                {{ form.date_livraison }}
+                {{ form.date_livraison.errors }}
+            </div>
+            <div class="form-group col-md-6">
+                {{ form.quantite.label_tag }}
+                {{ form.quantite }}
+                {{ form.quantite.errors }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-4">
+                {{ form.statut_livraison.label_tag }}
+                {{ form.statut_livraison }}
+                {{ form.statut_livraison.errors }}
+            </div>
+            <div class="form-group col-md-4">
+                {{ form.prix.label_tag }}
+                {{ form.prix }}
+                {{ form.prix.errors }}
+            </div>
+        </div>
+        <button type="submit" class="mt-3 btn btn-primary">
+            <i class="fas fa-save"></i> Enregistrer
+        </button>
+    </form>
+</div>
+{% endblock %}

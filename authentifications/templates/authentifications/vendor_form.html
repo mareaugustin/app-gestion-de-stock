@@ -1,0 +1,18 @@
+{% extends 'stock/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container px-5">
+    <h1 class="my-4">{{ form.instance.pk|yesno:"Modifier le fournisseur,Ajouter un fournisseur" }}</h1>
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Enregistrer
+        </button>
+        <a href="{% url 'vendor-list' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Retour
+        </a>
+    </form>
+</div>
+{% endblock %}

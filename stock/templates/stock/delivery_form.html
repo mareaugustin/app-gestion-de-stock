@@ -1,0 +1,73 @@
+{% extends "stock/base.html" %}
+
+{% block content %}
+  <div class="container m-4">
+    <h2>{% if form.instance.pk %}Mettre à jour une livraison{% else %}Créer une livraison{% endif %}</h2>
+    <form method="post" action="{% if form.instance.pk %}{% url 'delivery-update' form.instance.pk %}{% else %}{% url 'delivery-create' %}{% endif %}">
+      {% csrf_token %}
+      <div class="row p-3">
+        <div class="col-md-6">
+          <div class="form-group">
+            {{ form.article.label_tag }}
+            {{ form.article }}
+            {% if form.article.errors %}
+              <span class="text-danger">{{ form.article.errors }}</span>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            {{ form.nom_client.label_tag }}
+            {{ form.nom_client }}
+            {% if form.nom_client.errors %}
+              <span class="text-danger">{{ form.nom_client.errors }}</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="row p-3">
+        <div class="col-md-6">
+          <div class="form-group">
+            {{ form.numero_telephone.label_tag }}
+            {{ form.numero_telephone }}
+            {% if form.numero_telephone.errors %}
+              <span class="text-danger">{{ form.numero_telephone.errors }}</span>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            {{ form.localisation.label_tag }}
+            {{ form.localisation }}
+            {% if form.localisation.errors %}
+              <span class="text-danger">{{ form.localisation.errors }}</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="row p-3">
+        <div class="col-md-6">
+          <div class="form-group">
+            {{ form.date.label_tag }}
+            {{ form.date }}
+            {% if form.date.errors %}
+              <span class="text-danger">{{ form.date.errors }}</span>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            {{ form.est_livré }}
+            {{ form.est_livré.label_tag }}
+            {% if form.est_livré.errors %}
+              <span class="text-danger">{{ form.est_livré.errors }}</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary mt-2">
+        <i class="fa fa-save"></i> Enregistrer
+      </button>
+    </form>
+  </div>
+{% endblock %}
