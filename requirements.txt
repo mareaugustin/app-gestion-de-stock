@@ -14,5 +14,5 @@ crispy-bootstrap5==2024.2
 # Utility Packages
 openpyxl==3.1.5
 phonenumbers==8.13.43
-requests==2.32.3
+requests==2.32.4
 tablib==3.6.1
